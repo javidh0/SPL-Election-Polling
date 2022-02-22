@@ -1,7 +1,7 @@
 import datetime
 from tkinter import *
 from tkinter import ttk
-import time
+import time, webbrowser
 import winsound
 import pandas as pd
 import modules
@@ -24,7 +24,7 @@ fnt_3 = 'Consolas'  #text2
 fnt_4 = 'Consolas'  #buttons
 #Pre-defines:
 Delay = 5
-title = 'Aspl Election'
+title = 'Election'
 #Pre-Defined Funtions
 def back():
     clr_scrn()
@@ -52,9 +52,37 @@ def mainwindow():
     rtf.place(relx=0.5, rely=0.5, relheight=0.983, relwidth=0.983, anchor=CENTER)
     #Labels
     Label(rtf, text=title, font=(fnt_1, 30)).pack()
-    #buttons
-    Button(rtf, text="Button1", font=(fnt_4, 15), command=PrePolling).pack()
-    Button(rtf, text="Button2", font=(fnt_4, 15), command=Result).pack()
+    #Menu
+    def menuCreate():
+        mainMenu = Menu(rtm)
+        rtm.config(menu = mainMenu)
+        Edit = Menu(mainMenu)
+        mainMenu.add_cascade(label='Edit', menu=Edit)
+        Edit.add_command(label='Candidate List', command=CanAdd)
+        Edit.add_command(label='Voters List', command=EditVoter)
+        Edit.add_command(label='Set Delay',command=None)
+        Edit.add_command(label='Change Title', command=None)
+        Edit.add_separator()
+        Edit.add_command(label="Exit", command=rtm.quit)
+        Pre = Menu(mainMenu)
+        mainMenu.add_cascade(label="Preview", menu=Pre)
+        Pre.add_command(label='Preview', command=PreView)
+        Pre.add_command(label='Check', command=lambda: PrePolling(False))
+        security = Menu(mainMenu)
+        mainMenu.add_cascade(label='Security', menu=security)
+        security.add_command(label='Security Settings', command=None)
+        about = Menu(mainMenu)
+        mainMenu.add_cascade(label='About', menu=about)
+        about.add_command(label='About', command=None)
+        about.add_command(label='Contact', command=lambda: webbrowser.open('https://www.instagram.com/mohammedjavidh/'))
+        about.add_command(label='GitHub', command=lambda: webbrowser.open("https://github.com/mohammedjavidh17"))
+        issue = Menu(mainMenu)
+        mainMenu.add_cascade(label='Help', menu=issue)
+        RepIssue = Menu(issue)
+        issue.add_cascade(label="Report issue", menu=RepIssue)
+        RepIssue.add_command(label="Report on GitHub", command=lambda:webbrowser.open("https://github.com/mohammedjavidh17/SPL-Election-Polling/issues"))
+
+    menuCreate()
 
 def CanAdd():
     clr_scrn()
@@ -341,7 +369,7 @@ def Polling():
         Create()
         rtf.update()
     Poll()
-def PreView(back = True):
+def PreView(bck = True):
     clr_scrn()
     rtf = Screen()
     rtm.attributes('-fullscreen', True)
@@ -454,7 +482,7 @@ def PreView(back = True):
         if not win32api.GetKeyState(win32con.VK_CAPITAL):
             K.press_and_release("capslock")
         def fun_but():
-            if back:
+            if bck:
                 back()
             else:
                 clr_scrn()
@@ -464,7 +492,7 @@ def PreView(back = True):
         Create()
         rtf.update()
     Poll()
-def PrePolling():
+def PrePolling(start = True):
     #SuperPreDefines
     totalVoters =modules.read(voters_det).shape[0]
     def StartPolling():
@@ -520,8 +548,9 @@ def PrePolling():
     State.place(relx=0.6, rely=0.6)
     State1.place(relx=0.6, rely=0.7)
     #Button
-    poll =Button(rtf, text="Start Polling", font=(fnt_4, 25),background='green', command=StartPolling)
-    poll.place(relx=0.4, rely=0.95, anchor=S)
+    if start:
+        poll =Button(rtf, text="Start Polling", font=(fnt_4, 25),background='green', command=StartPolling)
+        poll.place(relx=0.4, rely=0.95, anchor=S)
     BackButton(rtf)
     if clr:
         poll['background'] = 'Red'
@@ -565,7 +594,6 @@ def Result():
     Label(rtf, text="BoyCandidates", font=(fnt_1, 25)).place(relx=0.3, rely=0.3, anchor=CENTER)
     Label(rtf, text='GirlCandidates', font=(fnt_1, 25)).place(relx=0.7, rely=0.3, anchor=CENTER)
     BackButton(rtf)
-
 
 mainwindow()
 rtm.mainloop()
