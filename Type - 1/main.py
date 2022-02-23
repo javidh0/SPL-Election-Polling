@@ -1,8 +1,6 @@
-import datetime
 from tkinter import *
 from tkinter import ttk
-import time, webbrowser
-import winsound
+import time, webbrowser, winsound, datetime, pyautogui as pyg
 import pandas as pd
 import modules
 import win32api, win32con, keyboard as K
@@ -23,8 +21,8 @@ fnt_2 = 'Consolas'  #text1
 fnt_3 = 'Consolas'  #text2
 fnt_4 = 'Consolas'  #buttons
 #Pre-defines:
-Delay = 5
-title = 'Election'
+Delay = [5]
+title = ['Election']
 #Pre-Defined Funtions
 def back():
     clr_scrn()
@@ -41,17 +39,33 @@ def Screen():
 
 #root
 rtm = Tk()
-rtm.title(title)
+rtm.title(title[0])
 rtm.iconbitmap(icon)
 width = rtm.winfo_screenwidth() - 50
 height = rtm.winfo_screenheight() - 50
 rtm.geometry('%dx%d'%(width, height))
 
 def mainwindow():
+    buf = []
+    #PreDefines
+    def ChangeDelay():
+        try:
+            Delay.clear()
+            Delay.append(int(pyg.prompt("Enter Delay (int)")))
+        except:
+            Delay.append(5)
+    def ChangeTitle():
+        try:
+            title.clear()
+            title.append(pyg.prompt("Enter Title"))
+        except:
+            pass
     rtf = LabelFrame(rtm)
     rtf.place(relx=0.5, rely=0.5, relheight=0.983, relwidth=0.983, anchor=CENTER)
-    #Labels
-    Label(rtf, text=title, font=(fnt_1, 30)).pack()
+    rtb = LabelFrame(rtf)
+    rtb.place(relx=0.01, rely=0.01)
+    rtc = LabelFrame(rtm)
+    rtc.place(relx=0.01, rely=0.8, relheight=0.19, relwidth=0.98)
     #Menu
     def menuCreate():
         mainMenu = Menu(rtm)
@@ -60,8 +74,8 @@ def mainwindow():
         mainMenu.add_cascade(label='Edit', menu=Edit)
         Edit.add_command(label='Candidate List', command=CanAdd)
         Edit.add_command(label='Voters List', command=EditVoter)
-        Edit.add_command(label='Set Delay',command=None)
-        Edit.add_command(label='Change Title', command=None)
+        Edit.add_command(label='Set Delay',command=ChangeDelay)
+        Edit.add_command(label='Change Title', command=ChangeTitle)
         Edit.add_separator()
         Edit.add_command(label="Exit", command=rtm.quit)
         Pre = Menu(mainMenu)
@@ -81,8 +95,14 @@ def mainwindow():
         RepIssue = Menu(issue)
         issue.add_cascade(label="Report issue", menu=RepIssue)
         RepIssue.add_command(label="Report on GitHub", command=lambda:webbrowser.open("https://github.com/mohammedjavidh17/SPL-Election-Polling/issues"))
-
+    #Buttons
+    Button(rtb, text="Edit Candidate list", command=CanAdd, width=20, font=('javi', 15)).pack(padx=5, pady=5)
+    Button(rtb, text="Edit Voters list", command=EditVoter, width=20, font=('javi', 15)).pack(padx=5, pady=5)
+    Button(rtb, text="Change Dealy", command=ChangeDelay, width=20, font=('javi', 15)).pack(padx=5, pady=5)
+    Button(rtb, text="Change Title", command=ChangeTitle, width=20, font=('javi', 15)).pack(padx=5, pady=5)
+    #Consol
     menuCreate()
+    
 
 def CanAdd():
     clr_scrn()
@@ -268,7 +288,7 @@ def Polling():
     reset = pd.DataFrame(list([]), columns = ['Voters_id']) 
     modules.write(reset, vote_skip, mod = 'w', hdr=True)
     #Label
-    Label(rtf, text=title, font=(fnt_1, 30)).place(relx=0.5, rely=0.01, anchor=N)
+    Label(rtf, text=title[0], font=(fnt_1, 30)).place(relx=0.5, rely=0.01, anchor=N)
     rtf.update()
     def Poll():
         BoyFlag = [False]
@@ -347,7 +367,7 @@ def Polling():
             rtm.unbind('<Return>')
             K.press_and_release("capslock")
             delay_fr.tkraise()
-            for x in range(Delay, 0, -1):
+            for x in range(Delay[0], 0, -1):
                 Label(delay_fr, text="Please Wait for \n"+str(x)+' Seconds', font=(fnt_3, 15)).pack()
                 rtm.update()
                 time.sleep(1)
@@ -384,7 +404,7 @@ def PreView(bck = True):
     voter = modules.read(voters_det)
     ind = [0]
     #Label
-    Label(rtf, text=title, font=(fnt_1, 30)).place(relx=0.5, rely=0.01, anchor=N)
+    Label(rtf, text=title[0], font=(fnt_1, 30)).place(relx=0.5, rely=0.01, anchor=N)
     rtf.update()
     def Poll():
         BoyFlag = [False]
@@ -462,7 +482,7 @@ def PreView(bck = True):
             rtm.unbind('<Return>')
             K.press_and_release("capslock")
             delay_fr.tkraise()
-            for x in range(Delay, 0, -1):
+            for x in range(Delay[0], 0, -1):
                 Label(delay_fr, text="Please Wait for \n"+str(x)+' Seconds', font=(fnt_3, 15)).pack()
                 rtm.update()
                 time.sleep(1)
@@ -524,9 +544,9 @@ def PrePolling(start = True):
     Label(rtf, text='BoyCandiate', font=(fnt_1, 20)).place(relx=0.05, rely=0.05)
     Label(rtf, text='GirlCandiate', font=(fnt_1, 20)).place(relx=0.3, rely=0.05)
     Label(rtf, text='VotersDetials', font=(fnt_1, 20)).place(relx=0.6, rely=0.05)
-    Label(rtf, text="Title : "+title, font=(fnt_1, 25)).place(relx=0.05, rely=0.5)
-    Label(rtf, text="Delay : "+str(Delay)+" Seconds", font=(fnt_1, 25)).place(relx=0.05, rely=0.6)
-    Label(rtf, text="Estimated Total Time : "+str(datetime.timedelta(seconds=(Delay+10)*totalVoters)), font=(fnt_1, 25)).place(relx=0.05, rely=0.7)
+    Label(rtf, text="Title : "+title[0], font=(fnt_1, 25)).place(relx=0.05, rely=0.5)
+    Label(rtf, text="Delay : "+str(Delay[0])+" Seconds", font=(fnt_1, 25)).place(relx=0.05, rely=0.6)
+    Label(rtf, text="Estimated Total Time : "+str(datetime.timedelta(seconds=(Delay[0]+10)*totalVoters)), font=(fnt_1, 25)).place(relx=0.05, rely=0.7)
     Label(rtf, text="Total Voters : "+str(totalVoters), font=(fnt_1, 27)).place(relx=0.6, rely=0.5)
     State = Label(rtf, font=(fnt_1, 25))
     State1= Label(rtf, font=(fnt_1, 25))
@@ -567,7 +587,7 @@ def PostPolling():
     rt = Frame(rtf)
     rt.place(relx=0.5, rely=0.5, anchor=CENTER)
     #Labels
-    Label(rtf, text=title, font=(fnt_1, 30)).place(relx=0.5, rely=0.02, anchor=N)
+    Label(rtf, text=title[0], font=(fnt_1, 30)).place(relx=0.5, rely=0.02, anchor=N)
     Label(rt, text='Polling completed', font=(fnt_1, 35)).pack()
     Label(rt, text='Total Voters : '+str(voter), font=(fnt_1, 25)).pack()
     Label(rt, text='Total Votes : '+str(voter-skips), font=(fnt_1, 25)).pack()
