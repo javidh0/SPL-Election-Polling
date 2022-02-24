@@ -66,6 +66,10 @@ def mainwindow():
     rtb.place(relx=0.01, rely=0.01)
     rtc = LabelFrame(rtm)
     rtc.place(relx=0.01, rely=0.8, relheight=0.19, relwidth=0.98)
+    rtB = LabelFrame(rtf)
+    rtB.place(relx=0.99, rely=0.01, anchor=NE)
+    rtp = LabelFrame(rtf)
+    rtp.place(relx=0.5, rely=0.01, anchor=N)
     #Menu
     def menuCreate():
         mainMenu = Menu(rtm)
@@ -96,13 +100,18 @@ def mainwindow():
         issue.add_cascade(label="Report issue", menu=RepIssue)
         RepIssue.add_command(label="Report on GitHub", command=lambda:webbrowser.open("https://github.com/mohammedjavidh17/SPL-Election-Polling/issues"))
     #Buttons
-    Button(rtb, text="Edit Candidate list", command=CanAdd, width=20, font=('javi', 15)).pack(padx=5, pady=5)
-    Button(rtb, text="Edit Voters list", command=EditVoter, width=20, font=('javi', 15)).pack(padx=5, pady=5)
-    Button(rtb, text="Change Dealy", command=ChangeDelay, width=20, font=('javi', 15)).pack(padx=5, pady=5)
-    Button(rtb, text="Change Title", command=ChangeTitle, width=20, font=('javi', 15)).pack(padx=5, pady=5)
+    Button(rtb, text="Edit Candidate list", command=CanAdd, width=25, font=('javi', 15)).pack(padx=10, pady=10)
+    Button(rtb, text="Edit Voters list", command=EditVoter, width=25, font=('javi', 15)).pack(padx=10, pady=10)
+    Button(rtb, text="Change Dealy", command=ChangeDelay, width=25, font=('javi', 15)).pack(padx=10, pady=10)
+    Button(rtb, text="Change Title", command=ChangeTitle, width=25, font=('javi', 15)).pack(padx=10, pady=10)
+    Button(rtB, text="Reset Vote count", command=lambda: Reset(can=True), width=25, font=('j', 15)).pack(padx=10, pady=10)
+    Button(rtB, text="Delete voters list", command=lambda: Reset(voter=True), width=25, font=('j', 15)).pack(padx=10, pady=10)
+    Button(rtB, text='Preview', command=lambda: PrePolling(False), width=25, font=('j', 15)).pack(padx=10, pady=10)
+    Button(rtB, text='Title and Delay', command=lambda : messagebox.showinfo("Info", 'Delay = '+str(Delay[0])+'\nTitle = '+str(title[0])), width=25, font=('j',15)).pack(padx=10, pady=10)
+    Button(rtp, text='Start Polling', command=PrePolling, font=('j', 15), width=30).pack(padx=10, pady=10)
+    Button(rtp, text='Result', command=Result, font=('j', 15), width=30).pack(padx=10, pady=10)
     #Consol
     menuCreate()
-    
 
 def CanAdd():
     clr_scrn()
@@ -614,6 +623,28 @@ def Result():
     Label(rtf, text="BoyCandidates", font=(fnt_1, 25)).place(relx=0.3, rely=0.3, anchor=CENTER)
     Label(rtf, text='GirlCandidates', font=(fnt_1, 25)).place(relx=0.7, rely=0.3, anchor=CENTER)
     BackButton(rtf)
+def Reset(can=False, voter=False, skip = False):
+    if can:
+        if messagebox.askokcancel('Confirmation', 'All Recorded vote count will be deleted'):
+            boyVote = modules.read(can_boy)
+            lst = []
+            for x in range(boyVote.shape[0]):
+                lst.append(0)
+            boyVote = pd.concat([boyVote, pd.DataFrame(list(list(lst)), columns=['VOTE'])], axis=1)
+            girlVote = modules.read(can_girl)
+            lst = []
+            for x in range(girlVote.shape[0]):
+                lst.append(0)
+            girlVote = pd.concat([girlVote, pd.DataFrame(list(list(lst)), columns=['VOTE'])], axis=1)
+            modules.write(boyVote, can_vote_boy, mod='w', hdr=True)
+            modules.write(girlVote, can_vote_girl, mod='w', hdr=True)
+    if voter:
+        if messagebox.askokcancel('Confirmation', 'Voters will be deleted'):
+            df = modules.read(voters_det).iloc[0:0, :]
+            modules.write(df, voters_det, mod='w', hdr=True)
+    if skip:
+        res = pd.DataFrame(list([]), columns = ['Voters_id']) 
+        modules.write(res, vote_skip, mod = 'w', hdr=True)
 
 mainwindow()
 rtm.mainloop()
