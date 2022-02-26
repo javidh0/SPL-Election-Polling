@@ -28,8 +28,11 @@ def back():
     clr_scrn()
     mainwindow()
 def clr_scrn():
-    for x in rtm.winfo_children():
-        x.destroy()
+    try:
+        for x in rtm.winfo_children():
+            x.destroy()
+    except:
+        pass
 def BackButton(fr):
     return Button(fr, text="\u274C", font=(fnt_4, 15),bg='#d62929', command=back).place(relx=0.98, rely=0.02, anchor=NE)  
 def Screen():
@@ -71,8 +74,8 @@ def mainwindow():
     rtf.place(relx=0.5, rely=0.5, relheight=0.983, relwidth=0.983, anchor=CENTER)
     rtb = LabelFrame(rtf)
     rtb.place(relx=0.01, rely=0.01)
-    rtc = LabelFrame(rtm)
-    rtc.place(relx=0.01, rely=0.8, relheight=0.19, relwidth=0.98)
+    rtc = LabelFrame(rtf, text="DebugOutput")
+    rtc.place(relx=0.001, rely=0.995, relheight=0.4, relwidth=0.995, anchor=SW)
     rtB = LabelFrame(rtf)
     rtB.place(relx=0.99, rely=0.01, anchor=NE)
     rtp = LabelFrame(rtf)
@@ -119,6 +122,7 @@ def mainwindow():
     Button(rtp, text='Result', command=Result, font=('j', 15), width=30).pack(padx=10, pady=10)
     #Consol
     menuCreate()
+    debug(rtc)
 
 def CanAdd():
     clr_scrn()
@@ -314,8 +318,11 @@ def Polling():
         rtf.update()
         def Over(): 
             for x in range(5, -1, -1):
-                for y in rtf.winfo_children():
-                    y.destroy()
+                try:
+                    for y in rtf.winfo_children():
+                        y.destroy()
+                except:
+                    pass
                 rtm.update()
                 Label(rtf, text = 'Back In', font = (fnt_3, 15)).pack()
                 Label(rtf, text=str(x)+' seconds', font = (fnt_3, 15)).pack()
@@ -348,12 +355,15 @@ def Polling():
                 winsound.Beep(2500, 1500)
                 Next(ind)
         def clr_all():
-            for a in boy.winfo_children():
-                a.destroy()
-            for a in girl.winfo_children():
-                a.destroy()
-            for a in Id.winfo_children():
-                a.destroy()
+            try:
+                for a in boy.winfo_children():
+                    a.destroy()
+                for a in girl.winfo_children():
+                    a.destroy()
+                for a in Id.winfo_children():
+                    a.destroy()
+            except:
+                pass
         def Next(ind):
             if ind[0]>=voter.shape[0]-1:
                 Over()
@@ -387,8 +397,11 @@ def Polling():
                 Label(delay_fr, text="Please Wait for \n"+str(x)+' Seconds', font=(fnt_3, 15)).pack()
                 rtm.update()
                 time.sleep(1)
-                for x in delay_fr.winfo_children():
-                    x.destroy()
+                try:
+                    for x in delay_fr.winfo_children():
+                        x.destroy()
+                except:
+                    pass
             rtm.update()
             for frame in [Id, boy, girl]:
                 frame.tkraise()
@@ -430,8 +443,11 @@ def PreView(bck = True):
         rtf.update()
         def Over(): 
             for x in range(5, -1, -1):
-                for y in rtf.winfo_children():
-                    y.destroy()
+                try:
+                    for y in rtf.winfo_children():
+                        y.destroy()
+                except:
+                    pass
                 rtm.update()
                 Label(rtf, text = 'Back In', font = (fnt_3, 15)).pack()
                 Label(rtf, text=str(x)+' seconds', font = (fnt_3, 15)).pack()
@@ -464,12 +480,15 @@ def PreView(bck = True):
                 winsound.Beep(2500, 1500)
                 Next(ind)
         def clr_all():
-            for a in boy.winfo_children():
-                a.destroy()
-            for a in girl.winfo_children():
-                a.destroy()
-            for a in Id.winfo_children():
-                a.destroy()
+            try:
+                for a in boy.winfo_children():
+                    a.destroy()
+                for a in girl.winfo_children():
+                    a.destroy()
+                for a in Id.winfo_children():
+                    a.destroy()
+            except:
+                pass
         def Next(ind):
             if ind[0]>=voter.shape[0]-1:
                 Over()
@@ -502,8 +521,11 @@ def PreView(bck = True):
                 Label(delay_fr, text="Please Wait for \n"+str(x)+' Seconds', font=(fnt_3, 15)).pack()
                 rtm.update()
                 time.sleep(1)
-                for x in delay_fr.winfo_children():
-                    x.destroy()
+                try:
+                    for x in delay_fr.winfo_children():
+                        x.destroy()
+                except:
+                    pass
             rtm.update()
             for frame in [Id, boy, girl]:
                 frame.tkraise()
@@ -662,7 +684,50 @@ def About():
     Label(rt, text='Version:3.0', font=fnt).pack()
     Label(rt, text='Devolped with Tk GUI toolkit Python', font=fnt).pack(padx=40)
     Label(rt, text='SourceCode available on GitHub', font=fnt).pack()
+    Button(rt, text='Contribute', font=fnt, command=lambda:webbrowser.open("https://github.com/mohammedjavidh17/SPL-Election-Polling/tree/main/Type%20-%201")).pack(pady=10)
     rt.mainloop()
-
+def debug(rt):    
+    errors = 0
+    warnings=0
+    try:
+        canBoy = modules.read(can_boy)
+        Label(rt, text="'assets\Can_boy.csv' exists", fg='green').pack(anchor=W)
+        if canBoy.shape[0] == 0:
+            Label(rt, text="Warning : Boy Candidate list is empty", fg='red').pack(anchor=W)
+            warnings+=1
+        if canBoy.shape[0] > 11:
+            Label(rt, text="Warning :Too many Boy Candidate (should be less than or equal to 11)", fg='red').pack(anchor=W)
+            warnings+=1
+    except:
+        Label(rt, text="Error : 'assets\Can_boy.csv' missing , try to reinstall", fg='red').pack(anchor=W)
+        errors+=1
+    try:
+        canGirl= modules.read(can_girl)
+        Label(rt, text="'assets\Can_girl.csv' exists", fg='green').pack(anchor=W)
+        if canGirl.shape[0] == 0:
+            Label(rt, text="Warning : Girl Candidate list is empty", fg='red').pack(anchor=W)
+        if canGirl.shape[0] > 11:
+            Label(rt, text="Warning :Too many Girl Candidate (should be less than or equal to 11)", fg='red').pack(anchor=W)
+            warnings+=1
+    except:
+        Label(rt, text="Error : 'assets\Can_girl.csv' missing , try to reinstall", fg='red').pack(anchor=W)
+        errors+=1
+    try:
+        voters =modules.read(voters_det)
+        Label(rt, text="'assets\Voters_det.csv' exists", fg='green').pack(anchor=W)
+        if voters.shape[0] == 0:
+            Label(rt, text="Warning : Voters list is empty", fg='red').pack(anchor=W)
+            warnings+=1
+    except:
+        Label(rt, text="Error : 'assets\Voters_det.csv' missing , try to reinstall", fg='red').pack(anchor=W)
+        errors+=1
+    if errors !=0:
+        Label(rt, text='Applicatoin may not work properply', fg='red').pack(anchor=W)
+    if warnings != 0:
+        Label(rt, text='Do not start polling', fg='red', font=("dfau", 13)).pack(anchor=W)
+    elif errors == 0:
+        Label(rt, text='All good, You can start the polling', fg='green',  font=("dfau", 13)).pack(anchor=W)
+def console(rt, text, type):
+    pass
 mainwindow()
 rtm.mainloop()
