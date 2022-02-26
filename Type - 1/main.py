@@ -48,21 +48,36 @@ width = rtm.winfo_screenwidth() - 50
 height = rtm.winfo_screenheight() - 50
 rtm.geometry('%dx%d'%(width, height))
 
-def mainwindow():
+def mainwindow(a = False):
+    rtf = LabelFrame(rtm)
+    rtf.place(relx=0.5, rely=0.5, relheight=0.983, relwidth=0.983, anchor=CENTER)
+    rtb = LabelFrame(rtf)
+    rtb.place(relx=0.01, rely=0.01)
+    rtB = LabelFrame(rtf)
+    rtB.place(relx=0.99, rely=0.01, anchor=NE)
+    rtp = LabelFrame(rtf)
+    rtp.place(relx=0.5, rely=0.01, anchor=N)
+    rtc = LabelFrame(rtf, text="DebugOutput")
+    rtc.place(relx=0.001, rely=0.995, relheight=0.4, relwidth=0.995, anchor=SW)
     buf = []
     #PreDefines
     def ChangeDelay():
         try:
             Delay.clear()
             Delay.append(int(pyg.prompt("Enter Delay (int)")))
+            console(rtc,text='delay Succesfully changed', type='green',ClearScreen=True)
         except:
             Delay.append(5)
+            console(rtc,'change delay failed', 'red', True)
     def ChangeTitle():
         rt= Tk()
         def ok():
             if str(tit.get()) != '':
                 title.clear()
                 title.append(str(tit.get()))
+                console(rtc,text='title Succesfully changed', type='green',ClearScreen=True)
+            else:
+                console(rtc,text='change title failed', type='red',ClearScreen=True)
             rt.destroy()
         rt.title("")
         Label(rt, text='Enter Title').pack(pady=5)
@@ -70,16 +85,6 @@ def mainwindow():
         tit.pack(padx=10)
         Button(rt, text='Ok', command=ok).pack(pady=5)
         rt.mainloop()
-    rtf = LabelFrame(rtm)
-    rtf.place(relx=0.5, rely=0.5, relheight=0.983, relwidth=0.983, anchor=CENTER)
-    rtb = LabelFrame(rtf)
-    rtb.place(relx=0.01, rely=0.01)
-    rtc = LabelFrame(rtf, text="DebugOutput")
-    rtc.place(relx=0.001, rely=0.995, relheight=0.4, relwidth=0.995, anchor=SW)
-    rtB = LabelFrame(rtf)
-    rtB.place(relx=0.99, rely=0.01, anchor=NE)
-    rtp = LabelFrame(rtf)
-    rtp.place(relx=0.5, rely=0.01, anchor=N)
     #Menu
     def menuCreate():
         mainMenu = Menu(rtm)
@@ -99,6 +104,9 @@ def mainwindow():
         #security = Menu(None)
         #mainMenu.add_cascade(label='Security', menu=None)
         #security.add_command(label='Security Settings', command=None)
+        contri= Menu(mainMenu)
+        mainMenu.add_cascade(label='Contribute', menu=contri)
+        contri.add_command(label='PullRequest', command=lambda: webbrowser.open('https://github.com/mohammedjavidh17/SPL-Election-Polling/pulls'))
         about = Menu(mainMenu)
         mainMenu.add_cascade(label='About', menu=about)
         about.add_command(label='About', command=About)
@@ -120,10 +128,11 @@ def mainwindow():
     Button(rtB, text='Title and Delay', command=lambda : messagebox.showinfo("Info", 'Delay = '+str(Delay[0])+'\nTitle = '+str(title[0])), width=25, font=('j',15)).pack(padx=10, pady=10)
     Button(rtp, text='Start Polling', command=PrePolling, font=('j', 15), width=30).pack(padx=10, pady=10)
     Button(rtp, text='Result', command=Result, font=('j', 15), width=30).pack(padx=10, pady=10)
+    Button(rtc, text='Debug', command=lambda:debug(rtc)).place(relx=0.99, rely=0.01, anchor=NE)
     #Consol
     menuCreate()
-    debug(rtc)
-
+    if a:
+        debug(rtc)
 def CanAdd():
     clr_scrn()
     #frame
@@ -684,7 +693,7 @@ def About():
     Label(rt, text='Version:3.0', font=fnt).pack()
     Label(rt, text='Devolped with Tk GUI toolkit Python', font=fnt).pack(padx=40)
     Label(rt, text='SourceCode available on GitHub', font=fnt).pack()
-    Button(rt, text='Contribute', font=fnt, command=lambda:webbrowser.open("https://github.com/mohammedjavidh17/SPL-Election-Polling/tree/main/Type%20-%201")).pack(pady=10)
+    Button(rt, text='Contribute', font=fnt, command=lambda:webbrowser.open("https://github.com/mohammedjavidh17/SPL-Election-Polling/pulls")).pack(pady=10)
     rt.mainloop()
 def debug(rt):    
     errors = 0
@@ -727,12 +736,13 @@ def debug(rt):
         Label(rt, text='Do not start polling', fg='red', font=("dfau", 13)).pack(anchor=W)
     elif errors == 0:
         Label(rt, text='All good, You can start the polling', fg='green',  font=("dfau", 13)).pack(anchor=W)
-def console(rt, text, type=None):
+def console(rt, text, type=None, ClearScreen=False):
+    if ClearScreen:
+        for x in rt.winfo_children():
+            x.destroy()
     lb = Label(rt, text=text)
-    if type == 'w':
-        lb['fg'] = 'red'
-    if type == 's':
-        lb['fg'] == 'green'
+    lb['fg'] = type
     lb.pack(anchor=W)
-mainwindow()
+
+mainwindow(a = True)
 rtm.mainloop()
