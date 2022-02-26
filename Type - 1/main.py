@@ -727,7 +727,12 @@ def debug(rt):
         Label(rt, text='Do not start polling', fg='red', font=("dfau", 13)).pack(anchor=W)
     elif errors == 0:
         Label(rt, text='All good, You can start the polling', fg='green',  font=("dfau", 13)).pack(anchor=W)
-def console(rt, text, type):
-    pass
+def console(rt, text, type=None):
+    lb = Label(rt, text=text)
+    if type == 'w':
+        lb['fg'] = 'red'
+    if type == 's':
+        lb['fg'] == 'green'
+    lb.pack(anchor=W)
 mainwindow()
 rtm.mainloop()
