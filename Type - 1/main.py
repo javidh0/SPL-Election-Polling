@@ -31,7 +31,7 @@ def clr_scrn():
     for x in rtm.winfo_children():
         x.destroy()
 def BackButton(fr):
-    return Button(fr, text="\u274C", font=(fnt_4, 20),bg='#d62929', command=back).place(relx=0.98, rely=0.98, anchor=SE)  
+    return Button(fr, text="\u274C", font=(fnt_4, 15),bg='#d62929', command=back).place(relx=0.98, rely=0.02, anchor=NE)  
 def Screen():
     rtf = LabelFrame(rtm)
     rtf.place(relx=0.5, rely=0.5, relheight=0.983, relwidth=0.983, anchor=CENTER)
@@ -55,11 +55,18 @@ def mainwindow():
         except:
             Delay.append(5)
     def ChangeTitle():
-        try:
-            title.clear()
-            title.append(pyg.prompt("Enter Title"))
-        except:
-            pass
+        rt= Tk()
+        def ok():
+            if str(tit.get()) != '':
+                title.clear()
+                title.append(str(tit.get()))
+            rt.destroy()
+        rt.title("")
+        Label(rt, text='Enter Title').pack(pady=5)
+        tit = Entry(rt, width=20)
+        tit.pack(padx=10)
+        Button(rt, text='Ok', command=ok).pack(pady=5)
+        rt.mainloop()
     rtf = LabelFrame(rtm)
     rtf.place(relx=0.5, rely=0.5, relheight=0.983, relwidth=0.983, anchor=CENTER)
     rtb = LabelFrame(rtf)
