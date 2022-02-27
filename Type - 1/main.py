@@ -131,8 +131,7 @@ def mainwindow(a = False):
     Button(rtc, text='Debug', command=lambda:debug(rtc)).place(relx=0.99, rely=0.01, anchor=NE)
     #Consol
     menuCreate()
-    if a:
-        debug(rtc)
+    debug(rtc)
 def CanAdd():
     clr_scrn()
     #frame
@@ -442,7 +441,7 @@ def PreView(bck = True):
     voter = modules.read(voters_det)
     ind = [0]
     #Label
-    Label(rtf, text=title[0], font=(fnt_1, 30)).place(relx=0.5, rely=0.01, anchor=N)
+    Label(rtf, text=title[0]+' Preview', font=(fnt_1, 30)).place(relx=0.5, rely=0.01, anchor=N)
     rtf.update()
     def Poll():
         BoyFlag = [False]
@@ -503,6 +502,8 @@ def PreView(bck = True):
                 Over()
             ind[0]+=1
             #Save()
+            if ind[0]>5:
+                messagebox.showinfo("Remainder", "Alert!, This is a preview, Votes will not be recorded!")
             clr_all()
             Create()
         def Skip(e = None):
@@ -510,6 +511,8 @@ def PreView(bck = True):
             if ind[0]>=voter.shape[0]-1:
                 Over()
             ind[0]+=1
+            if ind[0]>5:
+                messagebox.showinfo("Remainder", "Alert!, This is a preview, Votes will not be recorded!")
             clr_all()
             Create()
         def Create():
