@@ -117,6 +117,7 @@ def mainwindow(a = False):
         RepIssue = Menu(issue)
         issue.add_cascade(label="Report issue", menu=RepIssue)
         RepIssue.add_command(label="Report on GitHub", command=lambda:webbrowser.open("https://github.com/mohammedjavidh17/SPL-Election-Polling/issues"))
+        issue.add_command(label="Review on GitHub", command=lambda:webbrowser.open("https://github.com/mohammedjavidh17/SPL-Election-Polling/issues/new"))
     #Buttons
     Button(rtb, text="Edit Candidate list", command=CanAdd, width=25, font=('javi', 15)).pack(padx=10, pady=10)
     Button(rtb, text="Edit Voters list", command=EditVoter, width=25, font=('javi', 15)).pack(padx=10, pady=10)
