@@ -57,7 +57,7 @@ def mainwindow(a = False):
     rtB.place(relx=0.99, rely=0.01, anchor=NE)
     rtp = LabelFrame(rtf)
     rtp.place(relx=0.5, rely=0.01, anchor=N)
-    rtc = LabelFrame(rtf, text="DebugOutput")
+    rtc = LabelFrame(rtf)
     rtc.place(relx=0.001, rely=0.995, relheight=0.4, relwidth=0.995, anchor=SW)
     buf = []
     #PreDefines
