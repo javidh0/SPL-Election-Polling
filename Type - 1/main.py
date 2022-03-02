@@ -129,6 +129,7 @@ def mainwindow(a = False):
     Button(rtB, text='Title and Delay', command=lambda : messagebox.showinfo("Info", 'Delay = '+str(Delay[0])+'\nTitle = '+str(title[0])), width=25, font=('j',15)).pack(padx=10, pady=10)
     Button(rtp, text='Start Polling', command=PrePolling, font=('j', 15), width=30).pack(padx=10, pady=10)
     Button(rtp, text='Result', command=Result, font=('j', 15), width=30).pack(padx=10, pady=10)
+    Button(rtp, text='Absent', command=disSkip, font=('j', 15), width=30).pack(padx=10, pady=10)
     Button(rtc, text='Debug', command=lambda:debug(rtc)).place(relx=0.99, rely=0.01, anchor=NE)
     #Consol
     menuCreate()
@@ -697,6 +698,7 @@ def About():
     Label(rt, text='Version:3.0', font=fnt).pack()
     Label(rt, text='Devolped with Tk GUI toolkit Python', font=fnt).pack(padx=40)
     Label(rt, text='SourceCode available on GitHub', font=fnt).pack()
+    Button(rt, text="Devoloped by Mohammed Javidh", font=fnt, command=lambda: webbrowser.open('https://www.linkedin.com/in/mohammed-javidh-a5436b211/')).pack(pady=10)
     Button(rt, text='Contribute', font=fnt, command=lambda:webbrowser.open("https://github.com/mohammedjavidh17/SPL-Election-Polling/pulls")).pack(pady=10)
     rt.mainloop()
 def debug(rt):    
@@ -747,6 +749,16 @@ def console(rt, text, type=None, ClearScreen=False):
     lb = Label(rt, text=text)
     lb['fg'] = type
     lb.pack(anchor=W)
+def disSkip():
+    
+    clr_scrn()
+    rtf = Screen()
+    rtL = Frame(rtf)
+    rtL.place(relx=0.5, rely=0.5, anchor=CENTER)
+    lstBox = modules.ListCre(rtL)
+    modules.ListIns(lstBox, list(modules.read(vote_skip).iloc[:, 0]))
+    Label(rtf, text="Absenties", font=("", 25)).place(relx=0.5, rely=0.3, anchor=CENTER)
+    BackButton(rtf)
 
 mainwindow(a = True)
 rtm.mainloop()
