@@ -750,7 +750,6 @@ def console(rt, text, type=None, ClearScreen=False):
     lb['fg'] = type
     lb.pack(anchor=W)
 def disSkip():
-    
     clr_scrn()
     rtf = Screen()
     rtL = Frame(rtf)
