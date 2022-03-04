@@ -38,6 +38,7 @@ def BackButton(fr):
 def Screen():
     rtf = LabelFrame(rtm)
     rtf.place(relx=0.5, rely=0.5, relheight=0.983, relwidth=0.983, anchor=CENTER)
+    Label(rtf, text='Devoloped by Javidh', font=('Consolas', 15)).place(relx=0.98, rely=0.98, anchor=SE)
     return rtf
 
 #root
@@ -212,7 +213,7 @@ def CanAdd():
     Button(rtf, text="\u2795", font=(fnt_4, 15), command=lambda: boy_add(boy)).place(relx=0.3, rely=0.11) 
     Button(rtf, text="\u2795", font=(fnt_4, 15), command=lambda: girl_add(girl)).place(relx=0.8, rely=0.11)
     Button(rtf, text='Remove', font=(fnt_4, 20), command=remove).place(relx=0.55, rely=0.6, relwidth=0.15)
-    Button(rtf, text="Confrim Add", font=(fnt_4, 20), command= Confrm_add).place(relx=0.55, rely=0.7, relwidth=0.15)
+    Button(rtf, text="Confirm Add", font=(fnt_4, 20), command= Confrm_add).place(relx=0.55, rely=0.7, relwidth=0.15)
     #PostDefines
     def Binds(e = None):
         focs = str(rtm.focus_get())[13:]
@@ -560,7 +561,7 @@ def PreView(bck = True):
                 clr_scrn()
                 PrePolling()
             rtm.attributes('-fullscreen', False)
-        but = Button(rtf, text="\u274C", font=(fnt_4, 20),bg='#d62929', command=fun_but).place(relx=0.98, rely=0.98, anchor=SE)
+        but = Button(rtf, text="\u274C", font=(fnt_4, 20),bg='#d62929', command=fun_but).place(relx=0.98, rely=0.02, anchor=NE)
         Create()
         rtf.update()
     Poll()
