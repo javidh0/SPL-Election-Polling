@@ -1,4 +1,5 @@
-# SPL-Election-Polling
+# SPL-Election-Polling 
+### Type-1
 
 ## Main Window
 ![photo 1](https://user-images.githubusercontent.com/98268633/156788931-bee02934-f690-4426-b1da-73f4016a2b35.png)
