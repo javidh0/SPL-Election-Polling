@@ -38,6 +38,7 @@ def BackButton(fr):
 def Screen():
     rtf = LabelFrame(rtm)
     rtf.place(relx=0.5, rely=0.5, relheight=0.983, relwidth=0.983, anchor=CENTER)
+    Label(rtf, text='Devoloped by Javidh', font=('Consolas', 15)).place(relx=0.98, rely=0.98, anchor=SE)
     return rtf
 
 #root
@@ -48,21 +49,36 @@ width = rtm.winfo_screenwidth() - 50
 height = rtm.winfo_screenheight() - 50
 rtm.geometry('%dx%d'%(width, height))
 
-def mainwindow():
+def mainwindow(a = False):
+    rtf = LabelFrame(rtm)
+    rtf.place(relx=0.5, rely=0.5, relheight=0.983, relwidth=0.983, anchor=CENTER)
+    rtb = LabelFrame(rtf)
+    rtb.place(relx=0.01, rely=0.01)
+    rtB = LabelFrame(rtf)
+    rtB.place(relx=0.99, rely=0.01, anchor=NE)
+    rtp = LabelFrame(rtf)
+    rtp.place(relx=0.5, rely=0.01, anchor=N)
+    rtc = LabelFrame(rtf)
+    rtc.place(relx=0.001, rely=0.995, relheight=0.4, relwidth=0.995, anchor=SW)
     buf = []
     #PreDefines
     def ChangeDelay():
         try:
             Delay.clear()
             Delay.append(int(pyg.prompt("Enter Delay (int)")))
+            console(rtc,text='delay Succesfully changed', type='green',ClearScreen=True)
         except:
             Delay.append(5)
+            console(rtc,'change delay failed', 'red', True)
     def ChangeTitle():
         rt= Tk()
         def ok():
             if str(tit.get()) != '':
                 title.clear()
                 title.append(str(tit.get()))
+                console(rtc,text='title Succesfully changed', type='green',ClearScreen=True)
+            else:
+                console(rtc,text='change title failed', type='red',ClearScreen=True)
             rt.destroy()
         rt.title("")
         Label(rt, text='Enter Title').pack(pady=5)
@@ -70,16 +86,6 @@ def mainwindow():
         tit.pack(padx=10)
         Button(rt, text='Ok', command=ok).pack(pady=5)
         rt.mainloop()
-    rtf = LabelFrame(rtm)
-    rtf.place(relx=0.5, rely=0.5, relheight=0.983, relwidth=0.983, anchor=CENTER)
-    rtb = LabelFrame(rtf)
-    rtb.place(relx=0.01, rely=0.01)
-    rtc = LabelFrame(rtf, text="DebugOutput")
-    rtc.place(relx=0.001, rely=0.995, relheight=0.4, relwidth=0.995, anchor=SW)
-    rtB = LabelFrame(rtf)
-    rtB.place(relx=0.99, rely=0.01, anchor=NE)
-    rtp = LabelFrame(rtf)
-    rtp.place(relx=0.5, rely=0.01, anchor=N)
     #Menu
     def menuCreate():
         mainMenu = Menu(rtm)
@@ -99,6 +105,9 @@ def mainwindow():
         #security = Menu(None)
         #mainMenu.add_cascade(label='Security', menu=None)
         #security.add_command(label='Security Settings', command=None)
+        contri= Menu(mainMenu)
+        mainMenu.add_cascade(label='Contribute', menu=contri)
+        contri.add_command(label='PullRequest', command=lambda: webbrowser.open('https://github.com/mohammedjavidh17/SPL-Election-Polling/pulls'))
         about = Menu(mainMenu)
         mainMenu.add_cascade(label='About', menu=about)
         about.add_command(label='About', command=About)
@@ -109,6 +118,7 @@ def mainwindow():
         RepIssue = Menu(issue)
         issue.add_cascade(label="Report issue", menu=RepIssue)
         RepIssue.add_command(label="Report on GitHub", command=lambda:webbrowser.open("https://github.com/mohammedjavidh17/SPL-Election-Polling/issues"))
+        issue.add_command(label="Review on GitHub", command=lambda:webbrowser.open("https://github.com/mohammedjavidh17/SPL-Election-Polling/issues/new"))
     #Buttons
     Button(rtb, text="Edit Candidate list", command=CanAdd, width=25, font=('javi', 15)).pack(padx=10, pady=10)
     Button(rtb, text="Edit Voters list", command=EditVoter, width=25, font=('javi', 15)).pack(padx=10, pady=10)
@@ -120,10 +130,11 @@ def mainwindow():
     Button(rtB, text='Title and Delay', command=lambda : messagebox.showinfo("Info", 'Delay = '+str(Delay[0])+'\nTitle = '+str(title[0])), width=25, font=('j',15)).pack(padx=10, pady=10)
     Button(rtp, text='Start Polling', command=PrePolling, font=('j', 15), width=30).pack(padx=10, pady=10)
     Button(rtp, text='Result', command=Result, font=('j', 15), width=30).pack(padx=10, pady=10)
+    Button(rtp, text='Absent', command=disSkip, font=('j', 15), width=30).pack(padx=10, pady=10)
+    Button(rtc, text='Debug', command=lambda:debug(rtc)).place(relx=0.99, rely=0.01, anchor=NE)
     #Consol
     menuCreate()
     debug(rtc)
-
 def CanAdd():
     clr_scrn()
     #frame
@@ -202,7 +213,7 @@ def CanAdd():
     Button(rtf, text="\u2795", font=(fnt_4, 15), command=lambda: boy_add(boy)).place(relx=0.3, rely=0.11) 
     Button(rtf, text="\u2795", font=(fnt_4, 15), command=lambda: girl_add(girl)).place(relx=0.8, rely=0.11)
     Button(rtf, text='Remove', font=(fnt_4, 20), command=remove).place(relx=0.55, rely=0.6, relwidth=0.15)
-    Button(rtf, text="Confrim Add", font=(fnt_4, 20), command= Confrm_add).place(relx=0.55, rely=0.7, relwidth=0.15)
+    Button(rtf, text="Confirm Add", font=(fnt_4, 20), command= Confrm_add).place(relx=0.55, rely=0.7, relwidth=0.15)
     #PostDefines
     def Binds(e = None):
         focs = str(rtm.focus_get())[13:]
@@ -433,7 +444,7 @@ def PreView(bck = True):
     voter = modules.read(voters_det)
     ind = [0]
     #Label
-    Label(rtf, text=title[0], font=(fnt_1, 30)).place(relx=0.5, rely=0.01, anchor=N)
+    Label(rtf, text=title[0]+' Preview', font=(fnt_1, 30)).place(relx=0.5, rely=0.01, anchor=N)
     rtf.update()
     def Poll():
         BoyFlag = [False]
@@ -494,6 +505,8 @@ def PreView(bck = True):
                 Over()
             ind[0]+=1
             #Save()
+            if ind[0]>5:
+                messagebox.showinfo("Remainder", "Alert!, This is a preview, Votes will not be recorded!")
             clr_all()
             Create()
         def Skip(e = None):
@@ -501,6 +514,8 @@ def PreView(bck = True):
             if ind[0]>=voter.shape[0]-1:
                 Over()
             ind[0]+=1
+            if ind[0]>5:
+                messagebox.showinfo("Remainder", "Alert!, This is a preview, Votes will not be recorded!")
             clr_all()
             Create()
         def Create():
@@ -546,7 +561,7 @@ def PreView(bck = True):
                 clr_scrn()
                 PrePolling()
             rtm.attributes('-fullscreen', False)
-        but = Button(rtf, text="\u274C", font=(fnt_4, 20),bg='#d62929', command=fun_but).place(relx=0.98, rely=0.98, anchor=SE)
+        but = Button(rtf, text="\u274C", font=(fnt_4, 20),bg='#d62929', command=fun_but).place(relx=0.98, rely=0.02, anchor=NE)
         Create()
         rtf.update()
     Poll()
@@ -684,7 +699,8 @@ def About():
     Label(rt, text='Version:3.0', font=fnt).pack()
     Label(rt, text='Devolped with Tk GUI toolkit Python', font=fnt).pack(padx=40)
     Label(rt, text='SourceCode available on GitHub', font=fnt).pack()
-    Button(rt, text='Contribute', font=fnt, command=lambda:webbrowser.open("https://github.com/mohammedjavidh17/SPL-Election-Polling/tree/main/Type%20-%201")).pack(pady=10)
+    Button(rt, text="Devoloped by Mohammed Javidh", font=fnt, command=lambda: webbrowser.open('https://www.linkedin.com/in/mohammed-javidh-a5436b211/')).pack(pady=10)
+    Button(rt, text='Contribute', font=fnt, command=lambda:webbrowser.open("https://github.com/mohammedjavidh17/SPL-Election-Polling/pulls")).pack(pady=10)
     rt.mainloop()
 def debug(rt):    
     errors = 0
@@ -727,12 +743,22 @@ def debug(rt):
         Label(rt, text='Do not start polling', fg='red', font=("dfau", 13)).pack(anchor=W)
     elif errors == 0:
         Label(rt, text='All good, You can start the polling', fg='green',  font=("dfau", 13)).pack(anchor=W)
-def console(rt, text, type=None):
+def console(rt, text, type=None, ClearScreen=False):
+    if ClearScreen:
+        for x in rt.winfo_children():
+            x.destroy()
     lb = Label(rt, text=text)
-    if type == 'w':
-        lb['fg'] = 'red'
-    if type == 's':
-        lb['fg'] == 'green'
+    lb['fg'] = type
     lb.pack(anchor=W)
-mainwindow()
+def disSkip():
+    clr_scrn()
+    rtf = Screen()
+    rtL = Frame(rtf)
+    rtL.place(relx=0.5, rely=0.5, anchor=CENTER)
+    lstBox = modules.ListCre(rtL)
+    modules.ListIns(lstBox, list(modules.read(vote_skip).iloc[:, 0]))
+    Label(rtf, text="Absenties", font=("", 25)).place(relx=0.5, rely=0.3, anchor=CENTER)
+    BackButton(rtf)
+
+mainwindow(a = True)
 rtm.mainloop()
