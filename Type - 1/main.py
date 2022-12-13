@@ -14,7 +14,7 @@ can_boy = 'assets\Can_boy.csv'
 can_girl = 'assets\Can_girl.csv'
 voters_det = 'assets\Voters_det.csv'
 vote_skip  = 'assets\Vote_skip.csv'
-icon = "assets\icon-voting.ico"
+icon = "Type - 1\\assets\icon-voting.ico"
 ##fonts
 fnt_1 = 'Consolas'  #title
 fnt_2 = 'Consolas'  #text1
